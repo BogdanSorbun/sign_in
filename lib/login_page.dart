@@ -78,8 +78,9 @@ class LoginScreenState extends State<LoginScreen> {
 //      });
       String userId = "";
       try {
-        userId = await widget.auth.signIn(_email, _password);
+        userId = await widget.auth.signIn(user);
         print('Signed in: $userId');
+        widget.onSignedIn();
         Navigator.pushNamed(context, "/HomePage");
       } catch (e) {
         print('Error: $e');
