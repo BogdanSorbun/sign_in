@@ -17,25 +17,40 @@ class UserData {
 
 class UserAuth {
   String statusMessage = "Account has been created";
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 //  to create a new user
 //  Future is used for asynchronous operations - processing or I/O to be
 //  completed later.  So basically it performs other work while waiting for
 //  an opteration to finish.
   Future<String> createUser(UserData userData) async{
-    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     await firebaseAuth
       .createUserWithEmailAndPassword(
 //      here we see the information from the class that we used earlier...
         email: userData.email, password: userData.password);
     return statusMessage;
+    return user.uid;
   }
 
 //  to verify the new user
   Future<String> verifyUser(UserData userData) async{
-    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     await firebaseAuth
       .signInWithEmailAndPassword(
         email: userData.email, password: userData.password);
     return "login Successful";
   }
+}
+
+abstract class BaseAuth {
+  Future<String> signIn(String email, String password);
+  Future<String> signUp(String email, String password);
+  Future<FirebaseUser> getCurrentUser();
+  Future<void> sendEmailVerification();
+  Future<void> signOut();
+  Future<bool> isEmailVerified();
+}
+
+class Auth implements BaseAuth {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  
 }
