@@ -24,35 +24,35 @@ class UserAuth {
 //  an opteration to finish.
   Future<String> createUser(UserData userData) async{
     await firebaseAuth
-      .createUserWithEmailAndPassword(
+        .createUserWithEmailAndPassword(
 //      here we see the information from the class that we used earlier...
         email: userData.email, password: userData.password);
     return statusMessage;
   }
 
 //  to verify the new user
-//  Future<String> verifyUser(UserData userData) async{
-//    await firebaseAuth
-//      .signInWithEmailAndPassword(
-//        email: userData.email, password: userData.password);
-//    return "login Successful";
-//  }
+  Future<String> verifyUser(UserData userData) async{
+    await firebaseAuth
+      .signInWithEmailAndPassword(
+        email: userData.email, password: userData.password);
+    return "login Successful";
+  }
 }
 
-//abstract class BaseAuth {
-////  Future<String> signIn(UserData userData);
-//  Future<String> signUp(String email, String password);
-//  Future<FirebaseUser> getCurrentUser();
-//  Future<void> sendEmailVerification();
-//  Future<void> signOut();
-//  Future<bool> isEmailVerified();
-//}
+abstract class BaseAuth {
+  Future<String> signIn(UserData userData);
+  Future<String> signUp(String email, String password);
+  Future<FirebaseUser> getCurrentUser();
+  Future<void> sendEmailVerification();
+  Future<void> signOut();
+  Future<bool> isEmailVerified();
+}
 
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
 //  trying some combinations here
-  Future<String> signIn(UserData userData) async {
+  signIn(UserData userData) async {
     await _firebaseAuth.signInWithEmailAndPassword(
         email: userData.email, password: userData.password);
     return userData.uid;
