@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
-  static String tag = 'home-page';
+  final appTitle = 'Drawer Demo';
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ The Scaffold widget provides a consistent visual structure to apps that follow t
 Design Guidelines. It also supports special Material Design components, such as Drawers,
 AppBars, and SnackBars.
  */
-    Scaffold(
+    return Scaffold(
         drawer: Drawer(
 //ListView is handy because it allows users to scroll through the drawer if
 // the content takes more space than the screen supports.

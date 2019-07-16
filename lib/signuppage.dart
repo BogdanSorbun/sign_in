@@ -8,7 +8,10 @@ import 'package:sign_in/authentication.dart';
 //import 'package:flutter_app/style.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key key}) : super(key: key);
+  SignUpScreen({this.auth, this.onSignedUp});
+
+  final BaseAuth auth;
+  final VoidCallback onSignedUp;
 
   @override
   SignUpScreenState createState() => new SignUpScreenState();
@@ -19,8 +22,17 @@ class SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   UserData newUser = new UserData();
   UserAuth userAuth = new UserAuth();
-  bool _autovalidate = false;
+  bool _autoValidate = false;
   Validations _validations = new Validations();
+
+  String _email;
+  String _password;
+  String _errorMessage;
+
+  bool _isLoading;
+
+//  not sure what this is
+  BuildContext context;
 
   _onPressed() {
     print("button clicked");
@@ -34,10 +46,13 @@ class SignUpScreenState extends State<SignUpScreen> {
   void _handleSubmitted() {
     final FormState form = _formKey.currentState;
     if (!form.validate()) {
-      _autovalidate = true; // Start validating on every change.
+      _autoValidate = true; // Start validating on every change.
       showInSnackBar('Please fix the errors in red before submitting.');
     } else {
       form.save();
+//      widget.auth.sendEmailVerification();
+      showInSnackBar('Please confirm account in email!');
+      Navigator.pushNamed(context, "/Login");
       userAuth.createUser(newUser).then((onValue) {
         showInSnackBar(onValue);
       }).catchError((PlatformException onError) {
@@ -79,7 +94,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                     children: <Widget>[
                       new Form(
                           key: _formKey,
-                          autovalidate: _autovalidate,
+                          autovalidate: _autoValidate,
                           //onWillPop: _warnUserAboutInvalidData,
                           child: new Column(
                             children: <Widget>[
@@ -90,7 +105,7 @@ class SignUpScreenState extends State<SignUpScreen> {
 //                                textStyle: textStyle,
 //                                textFieldColor: textFieldColor,
                                 icon: Icons.person_outline,
-                                iconColor: Colors.white,
+                                iconColor: Colors.black,
                                 bottomMargin: 20.0,
                                 validateFunction: _validations.validateName,
                                 onSaved: (String name) {
@@ -104,7 +119,7 @@ class SignUpScreenState extends State<SignUpScreen> {
 //                                  textStyle: textStyle,
 //                                  textFieldColor: textFieldColor,
                                   icon: Icons.mail_outline,
-                                  iconColor: Colors.white,
+                                  iconColor: Colors.black,
                                   bottomMargin: 20.0,
                                   validateFunction: _validations.validateEmail,
                                   onSaved: (String email) {
@@ -117,7 +132,7 @@ class SignUpScreenState extends State<SignUpScreen> {
 //                                  textStyle: textStyle,
 //                                  textFieldColor: textFieldColor,
                                   icon: Icons.lock_open,
-                                  iconColor: Colors.white,
+                                  iconColor: Colors.black,
                                   bottomMargin: 40.0,
                                   validateFunction:
                                   _validations.validatePassword,
