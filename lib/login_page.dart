@@ -21,11 +21,14 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
+
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   ScrollController scrollController = new ScrollController();
-  bool autovalidate = false;
+  bool _autoValidate = false;
   Validations validations = new Validations();
+  UserData user = new UserData();
+  UserAuth userAuth = new UserAuth();
 
   String _email;
   String _password;
@@ -36,9 +39,7 @@ class LoginScreenState extends State<LoginScreen> {
 //  not sure what this is
   BuildContext context;
 
-  UserData user = new UserData();
-  UserAuth userAuth = new UserAuth();
-
+//figure out what in the world we are going to do with this
   _onPressed() {
     print("button clicked");
   }
@@ -54,30 +55,40 @@ class LoginScreenState extends State<LoginScreen> {
 
   void _handleSubmitted() async {
     final FormState form = formKey.currentState;
+
     setState(() {
       _errorMessage = "";
       _isLoading = true;
     });
+
     if (!form.validate()) {
-      autovalidate = true; // Start validating on every change.
-      showInSnackBar('Please fix the errors in red before submitting.');
+      _autoValidate = true; // Start validating on every change.
+      String showError = "Please fix the errors in red before submitting.";
+      showInSnackBar(showError);
+
       setState(() {
-        _errorMessage = "Please fix the errors in red before submitting.";
+        _errorMessage = showError;
         _isLoading = false;
       });
+
     } else {
       form.save();
       userAuth.verifyUser(user).then((onValue) {
         if (onValue == "login Successful") {
+
           setState(() {
             _isLoading = false;
           });
+
           Navigator.pushNamed(context, "/HomePage");
         } else {
           showInSnackBar(onValue);
         }}).catchError((PlatformException onError) {
         showInSnackBar(onError.message);
       });
+
+//      just ignore the code below for now
+
 //      String userId = "";
 //      try {
 //        userId = await widget.auth.signIn(user);
@@ -90,6 +101,7 @@ class LoginScreenState extends State<LoginScreen> {
 //          _isLoading = false;
 //        });
 //      }
+
     }
   }
 
@@ -133,7 +145,7 @@ class LoginScreenState extends State<LoginScreen> {
                       children: <Widget>[
                         new Form(
                           key: formKey,
-                          autovalidate: autovalidate,
+                          autovalidate: _autoValidate,
                           child: new Column(
                             children: <Widget>[
                               new InputField(
@@ -143,7 +155,7 @@ class LoginScreenState extends State<LoginScreen> {
 //                                  textStyle: textStyle,
 //                                  textFieldColor: textFieldColor,
                                   icon: Icons.mail_outline,
-                                  iconColor: Colors.white,
+                                  iconColor: Colors.black,
                                   bottomMargin: 20.0,
                                   validateFunction: validations.validateEmail,
                                   onSaved: (String email) {
@@ -157,7 +169,7 @@ class LoginScreenState extends State<LoginScreen> {
 //                                  textStyle: textStyle,
 //                                  textFieldColor: textFieldColor,
                                   icon: Icons.lock_open,
-                                  iconColor: Colors.white,
+                                  iconColor: Colors.black,
                                   bottomMargin: 30.0,
                                   validateFunction:
                                   validations.validatePassword,
@@ -172,7 +184,7 @@ class LoginScreenState extends State<LoginScreen> {
                                 height: 50.0,
                                 bottomMargin: 10.0,
                                 borderWidth: 0.0,
-//                                buttonColor: primaryColor,
+                                buttonColor: Colors.greenAccent,
                               ),
                             ],
                           ),
