@@ -67,27 +67,29 @@ class LoginScreenState extends State<LoginScreen> {
       });
     } else {
       form.save();
-//      userAuth.verifyUser(user).then((onValue) {
-////        figure out why this is not going through...
-//        if (onValue == "Login Successful") {
-//          Navigator.pushNamed(context, "/HomePage");
-//        } else {
-//          showInSnackBar(onValue);
-//        }}).catchError((PlatformException onError) {
-//        showInSnackBar(onError.message);
-//      });
-      String userId = "";
-      try {
-        userId = await widget.auth.signIn(user);
-        print('Signed in: $userId');
-        widget.onSignedIn();
-        Navigator.pushNamed(context, "/HomePage");
-      } catch (e) {
-        print('Error: $e');
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      userAuth.verifyUser(user).then((onValue) {
+        if (onValue == "login Successful") {
+          setState(() {
+            _isLoading = false;
+          });
+          Navigator.pushNamed(context, "/HomePage");
+        } else {
+          showInSnackBar(onValue);
+        }}).catchError((PlatformException onError) {
+        showInSnackBar(onError.message);
+      });
+//      String userId = "";
+//      try {
+//        userId = await widget.auth.signIn(user);
+//        print('Signed in: $userId');
+//        widget.onSignedIn();
+//        Navigator.pushNamed(context, "/HomePage");
+//      } catch (e) {
+//        print('Error: $e');
+//        setState(() {
+//          _isLoading = false;
+//        });
+//      }
     }
   }
 
