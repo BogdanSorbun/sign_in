@@ -8,10 +8,7 @@ import 'package:sign_in/authentication.dart';
 //import 'package:flutter_app/style.dart';
 
 class SignUpScreen extends StatefulWidget {
-  SignUpScreen({this.auth, this.onSignedUp});
-
-  final BaseAuth auth;
-  final VoidCallback onSignedUp;
+  const SignUpScreen({Key key}) : super(key: key);
 
   @override
   SignUpScreenState createState() => new SignUpScreenState();
@@ -24,15 +21,6 @@ class SignUpScreenState extends State<SignUpScreen> {
   UserAuth userAuth = new UserAuth();
   bool _autoValidate = false;
   Validations _validations = new Validations();
-
-  String _email;
-  String _password;
-  String _errorMessage;
-
-  bool _isLoading;
-
-//  not sure what this is
-  BuildContext context;
 
   _onPressed() {
     print("button clicked");
@@ -48,17 +36,30 @@ class SignUpScreenState extends State<SignUpScreen> {
     if (!form.validate()) {
       _autoValidate = true; // Start validating on every change.
       showInSnackBar('Please fix the errors in red before submitting.');
+    }
+//    validates and makes sure that all the passwords match
+//    might want to condense this in the future when you have time
+    if (!_validations.passwordNotMatch(newUser.password, newUser.confirmPassword)) {
+      _autoValidate = true; // Start validating on every change.
+      showInSnackBar('Passwords do not match');
     } else {
       form.save();
-//      widget.auth.sendEmailVerification();
-      showInSnackBar('Please confirm account in email!');
-      Navigator.pushNamed(context, "/Login");
-      userAuth.createUser(newUser).then((onValue) {
-        showInSnackBar(onValue);
-      }).catchError((PlatformException onError) {
-        showInSnackBar(onError.message);
-      });
+//      showInSnackBar('Please confirm account in email!');
+      _validations.passwordNotMatch(newUser.password, newUser.confirmPassword);
+      userAuth.sendEmailVerification();
+//      userAuth.sendEmailVerification(newUser).then((onValue) {
+//        showInSnackBar(onValue);
+//      }).catchError((PlatformException onError) {
+//        showInSnackBar(onError.message);
+//      });
+      showInSnackBar('Please confirm Email');
+      Navigator.pushNamed(context, "/Confirmation");
     }
+  }
+
+  void _displayUserInfo() {
+    final FormState form = _formKey.currentState;
+
   }
 
   @override
@@ -139,6 +140,18 @@ class SignUpScreenState extends State<SignUpScreen> {
                                   onSaved: (String password) {
                                     newUser.password = password;
                                   }),
+                              new InputField(
+                                  hintText: "Password Confirmation",
+                                  obscureText: true,
+                                  textInputType: TextInputType.text,
+//                                  textStyle: textStyle,
+//                                  textFieldColor: textFieldColor,
+                                  icon: Icons.lock_open,
+                                  iconColor: Colors.black,
+                                  bottomMargin: 40.0,
+                                  validateFunction:
+                                  _validations.validatePassword,
+                                  ),
                               new RoundedButton(
                                   buttonName: "Continue",
                                   onTap: _handleSubmitted,
