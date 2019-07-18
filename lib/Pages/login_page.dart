@@ -9,12 +9,7 @@ import 'package:sign_in/validation.dart';
 import 'package:sign_in/authentication.dart';
 
 class LoginScreen extends StatefulWidget {
-//  const LoginScreen({Key key}) : super(key: key);
-
-  LoginScreen({this.auth, this.onSignedIn});
-
-  final BaseAuth auth;
-  final VoidCallback onSignedIn;
+  const LoginScreen({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => new LoginScreenState();
@@ -29,12 +24,6 @@ class LoginScreenState extends State<LoginScreen> {
   Validations validations = new Validations();
   UserData user = new UserData();
   UserAuth userAuth = new UserAuth();
-
-  String _email;
-  String _password;
-  String _errorMessage;
-
-  bool _isLoading;
 
 //  not sure what this is
   BuildContext context;
@@ -56,51 +45,21 @@ class LoginScreenState extends State<LoginScreen> {
   void _handleSubmitted() async {
     final FormState form = formKey.currentState;
 
-    setState(() {
-      _errorMessage = "";
-      _isLoading = true;
-    });
-
     if (!form.validate()) {
       _autoValidate = true; // Start validating on every change.
       String showError = "Please fix the errors in red before submitting.";
       showInSnackBar(showError);
 
-      setState(() {
-        _errorMessage = showError;
-        _isLoading = false;
-      });
-
     } else {
       form.save();
       userAuth.verifyUser(user).then((onValue) {
         if (onValue == "login Successful") {
-
-          setState(() {
-            _isLoading = false;
-          });
-
           Navigator.pushNamed(context, "/HomePage");
         } else {
           showInSnackBar(onValue);
         }}).catchError((PlatformException onError) {
         showInSnackBar(onError.message);
       });
-
-//      just ignore the code below for now
-
-//      String userId = "";
-//      try {
-//        userId = await widget.auth.signIn(user);
-//        print('Signed in: $userId');
-//        widget.onSignedIn();
-//        Navigator.pushNamed(context, "/HomePage");
-//      } catch (e) {
-//        print('Error: $e');
-//        setState(() {
-//          _isLoading = false;
-//        });
-//      }
 
     }
   }
@@ -160,7 +119,6 @@ class LoginScreenState extends State<LoginScreen> {
                                   validateFunction: validations.validateEmail,
                                   onSaved: (String email) {
                                     user.email = email;
-                                    _email = email;
                                   }),
                               new InputField(
                                   hintText: "Password",
@@ -175,7 +133,6 @@ class LoginScreenState extends State<LoginScreen> {
                                   validations.validatePassword,
                                   onSaved: (String password) {
                                     user.password = password;
-                                    _password = password;
                                   }),
                               new RoundedButton(
                                 buttonName: "Get Started",
