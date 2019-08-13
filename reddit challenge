@@ -1,0 +1,44 @@
+void main() {
+  Alphabet alpha = new Alphabet();
+  print(split("sos"));
+}
+
+//dart challenge
+class Alphabet {
+  var alphabet = {
+    "a" : ".-",
+    "b" : "-...",
+    "c" : "-.-.",
+    "d" : "-..",
+    "e" : ".",
+    "f" : "..-.",
+    "g" : "--.",
+    "h" : "....",
+    "i" : "..",
+    "j" : ".---",
+    "k" : "-.-",
+    'l' : ".-..",
+    'm' : "--",
+    'n' : "-.",
+    'o' : "---",
+    'p' : ".--.",
+    'q' : "--.-",
+    'r' : ".-.",
+    's' : "...",
+    't' : "-",
+    'u' : "..-",
+    'v' : "...-",
+    'w' : ".--",
+    'x' : "-..-",
+    'y' : "-.--",
+    'z' : "--.."
+  };
+}
+
+split(String word) {
+  var wordIntoList = new List();
+  for (var i = 0 ; i <= word.length ; i++) {
+    wordIntoList.add(i);
+  }
+  return wordIntoList;
+}
